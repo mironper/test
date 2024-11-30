@@ -1,0 +1,29 @@
+[user]
+    name = Your Name
+    email = your.email@example.com
+
+[core]
+    editor = vim
+    autocrlf = input
+
+[alias]
+    co = checkout
+    br = branch
+    ci = commit
+    st = status
+
+[merge]
+    tool = vimdiff
+
+[diff]
+    tool = vimdiff
+[filter "krl"]
+    clean = krl_filter.sh
+    smudge = cat
+	required = true	
+[filter "krl1"]
+    clean = "sed -e 's/\(^&ACCESS [A-Z]*\).*$/\1/' -e '/\^&REL/d' -e '/\^&PARAM/d'"
+    smudge = "sed -e 's/\(^&ACCESS [A-Z]*\).*$/\1/' -e '/\^&REL/d' -e '/\^&PARAM/d'"
+[filter "test"]
+    clean = test_clean.sh
+    smudge = test_smuge.sh	

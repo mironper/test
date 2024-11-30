@@ -1,0 +1,32 @@
+&ACCESS RVO1
+DEF  StartMilling ( )
+  GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+    INTERRUPT ON 3 
+    BAS (#INITMOV,0 )
+    BAS (#VEL_PTP,20) ; set ptp velocity
+    BAS (#ACC_PTP,20) ; set ptp acceleration
+
+$TOOL=TOOL_DATA[5]
+$ACT_BASE = 0
+$ACT_TOOL = 5
+iStartExtr = 0
+$VEL.CP=0.5 ; robot speed
+  ;---movements from home to start position
+if $PRO_STATE0 == #P_ACTIVE then
+   ptp ActPosAxis
+   
+   lin_rel{z 200} 
+   
+   PosE = Robot1_T1
+   PosE.Z = Robot1_T1.Z + zFloating 
+   lin PosE
+   ptp_rel{A1 +50}
+   $BASE=BASE_DATA[12]
+   $TOOL=TOOL_DATA[5]
+   $ACT_BASE = 12
+   $ACT_TOOL = 5
+   lin StartZeroPos
+ENDIF
+WAIT SEC 0.5
+
+END

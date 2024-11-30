@@ -1,0 +1,12 @@
+# Ensure consistent line endings
+*.txt text eol=lf
+
+# Handle merge conflicts for text files
+*.txt merge=union
+
+# KRL filter
+*.src filter=krl
+*.dat filter=krl
+*.sub filter=krl
+
+*.txt filter=test

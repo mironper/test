@@ -1,0 +1,61 @@
+&ACCESS RVO5
+&REL 5
+&PARAM EDITMASK = *
+&PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe
+&PARAM DISKPATH = KRC:\R1\Program\slice
+DEF Home( )
+if $PRO_STATE0 == #P_ACTIVE then
+      
+      ;FOLD INI;%{PE}
+        ;FOLD BASISTECH INI
+          GLOBAL INTERRUPT DECL 3 WHEN $STOPMESS==TRUE DO IR_STOPM ( )
+          INTERRUPT ON 3 
+          BAS (#INITMOV,0 ) 
+          BAS (#VEL_PTP,10) ; set ptp velocity
+          BAS (#ACC_PTP,10) ; set ptp acceleration
+      
+        ;ENDFOLD (BASISTECH INI)
+        ;FOLD USER INI
+          ;Make your modifications here
+      
+        ;ENDFOLD (USER INI)
+        ;ENDFOLD (INI)
+        
+       
+      
+      $TOOL=TOOL_DATA[2]
+      $ACT_BASE = 0
+      $ACT_TOOL = 2
+      iStartExtr = 0
+      $VEL.CP=0.5 ; robot speed
+      
+      ptp ActPosAxis
+      
+      lin_rel{z 200} 
+      
+      if $OUT[124]  then
+           PosE = Robot1_T1
+           PosE.Z = Robot1_T1.Z + zFloating 
+           lin PosE
+           ENDIF    
+      
+       
+        if $OUT[125] or $OUT[126] then
+           PosE = Robot1_T2
+           PosE.Z = Robot1_T2.Z + zFloating 
+            lin PosE
+        ENDIF    
+       
+  
+; Home position
+          PosE = Robot1_T1
+           lin PosE
+
+;FOLD SPTP HOME Vel=15 % DEFAULT ;%{PE}
+;FOLD Parameters ;%{h}
+;Params IlfProvider=kukaroboter.basistech.inlineforms.movement.spline; Kuka.IsGlobalPoint=False; Kuka.PointName=HOME; Kuka.BlendingEnabled=False; Kuka.MoveDataPtpName=DEFAULT; Kuka.VelocityPtp=15; Kuka.VelocityFieldEnabled=True; Kuka.ColDetectFieldEnabled=True; Kuka.CurrentCDSetIndex=0; Kuka.MovementParameterFieldEnabled=True; IlfCommand=SPTP
+;ENDFOLD
+SPTP XHOME WITH $VEL_AXIS[1] = SVEL_JOINT(15.0), $TOOL = STOOL2(FHOME), $BASE = SBASE(FHOME.BASE_NO), $IPO_MODE = SIPO_MODE(FHOME.IPO_FRAME), $LOAD = SLOAD(FHOME.TOOL_NO), $ACC_AXIS[1] = SACC_JOINT(PDEFAULT), $APO = SAPO_PTP(PDEFAULT), $GEAR_JERK[1] = SGEAR_JERK(PDEFAULT), $COLLMON_TOL_PRO[1] = USE_CM_PRO_VALUES(0)
+;ENDFOLD
+ENDIF
+END
